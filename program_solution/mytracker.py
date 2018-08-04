@@ -6,7 +6,7 @@ from collections import OrderedDict
 
 
 class AI_Tracker():
-    def __init__(self, selectObjectID=2, camera_velocity=0,maxDisappeared=10):
+    def __init__(self, selectObjectID=4, camera_velocity=0,maxDisappeared=10):
         self.objects_centroid = OrderedDict()
         self.objects_centroids_buffer=OrderedDict()
         self.objects_bbox_buffer=OrderedDict()
@@ -16,8 +16,12 @@ class AI_Tracker():
         self.maxDisappeared = maxDisappeared
         self.selectObjectID=selectObjectID
         self.nextObjectID = 0
-        self.L=3.0409374
-        self.alpha= 0.92117816
+        self.L = 1.28
+        self.alpha = 1.35
+        self.beta = 0.46
+        self.n=200
+        self.FPS=60
+        self.L_car=3
         self.camera_velocity=camera_velocity
 
     def register(self, centroid, rect):
@@ -103,11 +107,11 @@ class AI_Tracker():
            the measuring value of L and alpha are respectively 3.0409374, 0.92117816
            :param alpha:camera slop angle
            :param L:the vertical distance between camera center and object '''
-        n=200
-        y=53*pi/180
-        AB=3
-        P_A = self.objects_bbox_buffer[self.selectObjectID][0][0]
-        P_B = self.objects_bbox_buffer[self.selectObjectID][0][2]
+        n=self.n
+        y=self.beta
+        AB=self.L_car
+        P_A = self.objects_bbox_buffer[self.selectObjectID][7][0]
+        P_B = self.objects_bbox_buffer[self.selectObjectID][7][2]
         P_C = self.objects_bbox_buffer[self.selectObjectID][-1][0]
         P_D = self.objects_bbox_buffer[self.selectObjectID][-1][2]
 
@@ -116,8 +120,9 @@ class AI_Tracker():
                    /(n**2-n*np.tan(x)*np.tan(y)*(P_C+P_D-2*n)+(P_C-n)*(P_D-n)*np.tan(x)**2*np.tan(y)**2)-(P_B-P_A)/(P_D-P_C)
         root=fsolve(f,[.7])
         self.alpha=root
-        L=AB*(n*2-n*np.tan(root)*np.tan(y)*(P_A+P_B-2*n)+(P_A-n)*(P_B-n)*np.tan(root)**2*np.tan(y)**2)/\
+        L=AB*(n**2-n*np.tan(root)*np.tan(y)*(P_A+P_B-2*n)+(P_A-n)*(P_B-n)*np.tan(root)**2*np.tan(y)**2)/\
           ((P_B-P_A)*n*np.tan(y)*(1/np.cos(root))**2)
+        print(root,L)
         self.L=L
 
     def update_localization(self):
@@ -136,18 +141,18 @@ class AI_Tracker():
     def update_speed(self):
         L = self.L
         alpha = self.alpha
-        beta = 0.925
+        beta = self.beta
         n = 200
+        FPS = self.FPS
         for (objectID, centroids) in self.objects_centroids_buffer.items():
-            if len(centroids)>=4:
-                P_S = centroids[-4][0]
+            if len(centroids)>=21:
+                P_S = centroids[-21][0]
                 P_E = centroids[-1][0]
                 G_S = L * (n * np.tan(alpha) - (n - P_S) * np.tan(beta)) / (n + (n - P_S) * np.tan(alpha) * np.tan(beta))
                 G_E = L * (n * np.tan(alpha) - (n - P_E) * np.tan(beta)) / (n + (n - P_E) * np.tan(alpha) * np.tan(beta))
                 S=G_E-G_S
                 #frames=len(self.objects_centroids_buffer[objectID])
-                frames=3
-                FPS=5581/93
+                frames=20
                 T=frames/FPS
                 V=S/T+self.camera_velocity
                 self.objects_velocity[objectID]=V

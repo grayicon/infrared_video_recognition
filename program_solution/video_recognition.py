@@ -11,7 +11,7 @@ import cv2
 
 
 # construct the argument parse and parse the arguments
-def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None):
+def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None,is_select_frames=None):
     ap = argparse.ArgumentParser()
     ap.add_argument("-p", "--prototxt",
                     default='caffe_models/MobileNetSSD_deploy.prototxt.txt',
@@ -99,13 +99,13 @@ def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None
         ct.update_speed()
         ct.update_localization()
         objects_centroids_buffer=ct.objects_centroids_buffer
-        objects_bbox_buffer=ct.objects_bbox_buffer
+        # objects_bbox_buffer=ct.objects_bbox_buffer
         # standardize the camera parameters,the block should decomments when first launch program
         # if len(objects_bbox_buffer)!=0:
-        #     if len(objects_bbox_buffer[ct.selectObjectID])==50:
+        #     if select_objectID[0] in objects.keys() and len(objects_bbox_buffer[ct.selectObjectID])>=10:
         #         ct.camera_standardize()
-        #if len(objects)>0:
-            #print('the select objects({}) appear at {} frame'.format(select_CLASSES[0],frame_counter))
+        # if len(objects)>0:
+        #     print('the select objects({}) appear at {} frame'.format(select_CLASSES[0],frame_counter))
         j=floor(frame_counter/2)
         # update the trace of objects every 2 frames
         if frame_counter%2==0:
@@ -137,15 +137,17 @@ def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None
             cv2.putText(frame,text,(centroid[0]-10,centroid[1]-10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),2)
             cv2.circle(frame,(centroid[0],centroid[1]),4,(0,255,0),-1)
         for (objectID,centroid) in objects.items():
-            if objectID in select_objectID:
-                text='the select object(ID:{}) appears in the {} frame'.format(objectID,frame_counter)
-                cv2.putText(frame,text,(1,10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),2)
+            if is_select_frames is not None:
+                if objectID in select_objectID and objectID in objects.keys():
+                    text='the select object(ID:{}) appears in the {} frame'.format(objectID,frame_counter)
+                    cv2.putText(frame,text,(1,10),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),2)
 
         # update the speed of selected objects
         for (objectID,velocity) in ct.objects_velocity.items():
             if is_speed is not None:
                 if objectID in select_objectID and objectID in objects.keys():
                     text='velocity:{}km/s'.format(int(velocity*3.6))
+                    print('velocity:{}km/s'.format(int(velocity * 3.6)))
                     cv2.putText(frame,text,(objects[objectID][0]-20,objects[objectID][1]+20),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),2)
         # update the position of selected objects
         for (objectID,position) in ct.objects_position.items():
@@ -168,8 +170,9 @@ def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None
     fps.stop()
     print("[INFO] elapsed time: {:.2f}".format(fps.elapsed()))
     print("[INFO] approx. FPS: {:.2f}".format(fps.fps()))
+    print(len(ct.objects_bbox_buffer[select_objectID[0]]))
     cv2.destroyAllWindows()
 
 
 if __name__ == '__main__':
-    main()
+    main(is_speed=True,is_localization=True)
