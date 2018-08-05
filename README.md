@@ -19,16 +19,24 @@
 * **目标检测算法**：MobilenetSSD
 ![](test_images/mobileSSD.png)
 
-输入图片数据，将输出图片中的物体的类别，置信概率，并回归物体的边界框                                                          
+输入图片数据，将输出图片中的物体的类别，置信概率，并回归物体的边界框
 * **目标追踪算法**：centroid tracker（质心追踪器）
 * **step1**:接受边界框坐标并计算质心
+
 ![](test_images/step1.png)
+
 * **step2**:计算新边界框与当前对象之间的欧式距离
+
 ![](test_images/step2.png)
+
 * **step3**:更新当前对象的质心坐标(x,y)
+
 ![](test_images/step3.png)
+
 * **step4**:注册新的对象
+
 ![](test_images/step4.png)
+
 
 
 * **目标定位及测速算法**：图像像素距离与空间距离变换公式
@@ -41,19 +49,28 @@ PA,PB分别为实物场景中的A,B点所对应的像素点位置坐标，这里
 
 # 2.测试报告
 * **实时目标检测，定位，检测**
-![实时目标检测，定位，测速](test_images/frame1.png)![](test_images/frame2.png)![](test_images/frame3.png)
+
+![](test_images/frame1.png)
+![](test_images/frame2.png)
+![](test_images/frame3.png)
+
 **监测视频文件**：720P-60文件夹下2048001文件，该文件描述为（摄像机位置：北纬33°57′55″ 东经118°15′3″；摄像机方向：东南138度；摄像机速度0km/h），从中截取了连续片段中的三帧图片；
 
-   **监测结果**:出选定的目标(ID:4)为汽车，实现边界框回归，实时速度分别为23，17,16km/h,实时位置分别为为东南172,175,179度，分别距离摄像头3,4,5m。    监测结果与实际情况比较相符。
+**监测结果**:出选定的目标(ID:4)为汽车，实现边界框回归，实时速度分别为23，17,16km/h,实时位置分别为为东南172,175,179度，分别距离摄像头3,4,5m。    监测结果与实际情况比较相符。
 
 * **实时轨迹标记**
+
 ![轨迹标记](test_images/tracing.png)
 
 
 * **动态小目标，多目标检测**
+
 ![小目标检测](test_images/little_objects_detection.png)![](test_images/persons.png)
 
+
+
 * **搜索指定目标出现帧数**
+
 ![目标出现帧数](test_images/select_frame.png)
 
 * **注意事项**：
