@@ -1,1 +1,0 @@
-算法模型及算法测试图片在压缩包解压后的/infrared_video_recognition/document/infrared video detection.ipynb文件中查看
