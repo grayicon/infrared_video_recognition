@@ -51,7 +51,9 @@ PA,PB分别为实物场景中的A,B点所对应的像素点位置坐标，这里
 * **实时目标检测，定位，检测**
 
 ![](test_images/frame1.png)
+
 ![](test_images/frame2.png)
+
 ![](test_images/frame3.png)
 
 **监测视频文件**：720P-60文件夹下2048001文件，该文件描述为（摄像机位置：北纬33°57′55″ 东经118°15′3″；摄像机方向：东南138度；摄像机速度0km/h），从中截取了连续片段中的三帧图片；
@@ -65,7 +67,9 @@ PA,PB分别为实物场景中的A,B点所对应的像素点位置坐标，这里
 
 * **动态小目标，多目标检测**
 
-![小目标检测](test_images/little_objects_detection.png)![](test_images/persons.png)
+![小目标检测](test_images/little_objects_detection.png)!
+
+[](test_images/persons.png)
 
 
 
