@@ -69,7 +69,7 @@ PA,PB分别为实物场景中的A,B点所对应的像素点位置坐标，这里
 
 ![小目标检测](test_images/little_objects_detection.png)!
 
-[](test_images/persons.png)
+![](test_images/persons.png)
 
 
 
