@@ -146,8 +146,8 @@ def main(select_objectID=[4],is_tracking=None,is_localization=None,is_speed=None
         for (objectID,velocity) in ct.objects_velocity.items():
             if is_speed is not None:
                 if objectID in select_objectID and objectID in objects.keys():
-                    text='velocity:{}km/s'.format(int(velocity*3.6))
-                    print('velocity:{}km/s'.format(int(velocity * 3.6)))
+                    text='velocity:{}km/h'.format(int(velocity*3.6))
+                    print('velocity:{}km/h'.format(int(velocity * 3.6)))
                     cv2.putText(frame,text,(objects[objectID][0]-20,objects[objectID][1]+20),cv2.FONT_HERSHEY_SIMPLEX,0.5,(0,255,0),2)
         # update the position of selected objects
         for (objectID,position) in ct.objects_position.items():
